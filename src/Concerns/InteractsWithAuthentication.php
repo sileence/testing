@@ -38,7 +38,7 @@ trait InteractsWithAuthentication
      */
     protected function isAuthenticated($guard = null)
     {
-        return $this->app->make('auth')->guard($guard)->check();
+        return $this->auth($guard)->check();
     }
 
     /**
@@ -51,7 +51,7 @@ trait InteractsWithAuthentication
     public function seeIsAuthenticatedAs($user, $guard = null)
     {
         $this->assertSame(
-            $this->app->make('auth')->guard($guard)->user(), $user,
+            $this->auth($guard)->user()->getKey(), $user->getKey(),
             'The logged in user is not the same'
         );
 
@@ -99,10 +99,27 @@ trait InteractsWithAuthentication
      */
     protected function hasCredentials(array $credentials, $guard = null)
     {
-        $provider = $this->app->make('auth')->guard($guard)->getProvider();
+        $provider = $this->auth($guard)->getProvider();
 
         $user = $provider->retrieveByCredentials($credentials);
 
         return $user && $provider->validateCredentials($user, $credentials);
+    }
+
+    /**
+     * Get the auth instance.
+     *
+     * @param  string|null  $guard
+     * @return \Illuminate\Contracts\Auth\Factory
+     */
+    protected function auth($guard = null)
+    {
+        $auth = $this->app->make('auth');
+
+        if ($guard != null) {
+            $auth = $auth->guard($guard);
+        }
+
+        return $auth;
     }
 }
