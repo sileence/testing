@@ -2,8 +2,8 @@
 
 use Mockery as m;
 use Illuminate\Auth\AuthManager;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Foundation\Application;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Testing\Concerns\InteractsWithAuthentication;
@@ -28,14 +28,9 @@ class InteractsWithAuthenticationTests extends PHPUnit_Framework_TestCase
     /**
      * @var \Mockery
      */
-    protected function mockGuard()
+    protected function mockAuth()
     {
-        $guard = m::mock(Guard::class);
-
         $auth = m::mock(AuthManager::class);
-        $auth->shouldReceive('guard')
-            ->once()
-            ->andReturn($guard);
 
         $this->app = m::mock(Application::class);
         $this->app->shouldReceive('make')
@@ -43,7 +38,7 @@ class InteractsWithAuthenticationTests extends PHPUnit_Framework_TestCase
             ->withArgs(['auth'])
             ->andReturn($auth);
 
-        return $guard;
+        return $auth;
     }
 
     public function tearDown()
@@ -53,7 +48,7 @@ class InteractsWithAuthenticationTests extends PHPUnit_Framework_TestCase
 
     public function testSeeIsAuthenticated()
     {
-        $this->mockGuard()
+        $this->mockAuth()
             ->shouldReceive('check')
             ->once()
             ->andReturn(true);
@@ -63,7 +58,7 @@ class InteractsWithAuthenticationTests extends PHPUnit_Framework_TestCase
 
     public function testDontSeeIsAuthenticated()
     {
-        $this->mockGuard()
+        $this->mockAuth()
             ->shouldReceive('check')
             ->once()
             ->andReturn(false);
@@ -73,12 +68,17 @@ class InteractsWithAuthenticationTests extends PHPUnit_Framework_TestCase
 
     public function testSeeIsAuthenticatedAs()
     {
-        $this->mockGuard()
+        $user = m::mock(Model::class);
+        $user->shouldReceive('getKey')
+            ->twice()
+            ->andReturn(1);
+
+        $this->mockAuth()
             ->shouldReceive('user')
             ->once()
-            ->andReturn('Someone');
+            ->andReturn($user);
 
-        $this->seeIsAuthenticatedAs('Someone');
+        $this->seeIsAuthenticatedAs($user);
     }
 
     protected function setupProvider(array $credentials)
@@ -95,7 +95,7 @@ class InteractsWithAuthenticationTests extends PHPUnit_Framework_TestCase
             ->with($user, $credentials)
             ->andReturn($this->credentials === $credentials);
 
-        $this->mockGuard()
+        $this->mockAuth()
             ->shouldReceive('getProvider')
             ->once()
             ->andReturn($provider);
