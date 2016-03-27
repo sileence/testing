@@ -7,17 +7,17 @@ use InvalidArgumentException;
 use Illuminate\Http\UploadedFile;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\Crawler;
-use Illuminate\Foundation\Testing\HttpException;
-use Illuminate\Foundation\Testing\Constraints\HasText;
-use Illuminate\Foundation\Testing\Constraints\HasLink;
-use Illuminate\Foundation\Testing\Constraints\HasValue;
-use Illuminate\Foundation\Testing\Constraints\HasSource;
-use Illuminate\Foundation\Testing\Constraints\IsChecked;
-use Illuminate\Foundation\Testing\Constraints\HasElement;
-use Illuminate\Foundation\Testing\Constraints\IsSelected;
-use Illuminate\Foundation\Testing\Constraints\HasInElement;
-use Illuminate\Foundation\Testing\Constraints\PageConstraint;
-use Illuminate\Foundation\Testing\Constraints\ReversePageConstraint;
+use Illuminate\Testing\HttpException;
+use Illuminate\Testing\Constraints\HasText;
+use Illuminate\Testing\Constraints\HasLink;
+use Illuminate\Testing\Constraints\HasValue;
+use Illuminate\Testing\Constraints\HasSource;
+use Illuminate\Testing\Constraints\IsChecked;
+use Illuminate\Testing\Constraints\HasElement;
+use Illuminate\Testing\Constraints\IsSelected;
+use Illuminate\Testing\Constraints\HasInElement;
+use Illuminate\Testing\Constraints\PageConstraint;
+use Illuminate\Testing\Constraints\ReversePageConstraint;
 use PHPUnit_Framework_ExpectationFailedException as PHPUnitException;
 
 trait InteractsWithPages
@@ -179,7 +179,7 @@ trait InteractsWithPages
      * @param  string|null  $message
      * @return void
      *
-     * @throws \Illuminate\Foundation\Testing\HttpException
+     * @throws \Illuminate\Testing\HttpException
      */
     protected function assertPageLoaded($uri, $message = null)
     {
