@@ -1,14 +1,15 @@
 <?php
 
-use Illuminate\Testing\Concerns\MakesHttpRequests;
+use Illuminate\Http\Response;
+use Illuminate\Testing\Concerns\InteractsWithJson;
 
 class InteractsWithJsonTest extends PHPUnit_Framework_TestCase
 {
-    use MakesHttpRequests;
+    use InteractsWithJson;
 
     public function testSeeJsonStructure()
     {
-        $this->response = new \Illuminate\Http\Response(new JsonSerializableMixedResourcesStub);
+        $this->response = new Response(new JsonSerializableMixedResourcesStub);
 
         // At root
         $this->seeJsonStructure(['foo']);
@@ -23,7 +24,7 @@ class InteractsWithJsonTest extends PHPUnit_Framework_TestCase
         $this->seeJsonStructure(['baz' => ['*' => ['foo', 'bar' => ['foo', 'bar']]]]);
 
         // Wildcard (repeating structure) at root
-        $this->response = new \Illuminate\Http\Response(new JsonSerializableSingleResourceStub);
+        $this->response = new Response(new JsonSerializableSingleResourceStub);
         $this->seeJsonStructure(['*' => ['foo', 'bar', 'foobar']]);
     }
 }
