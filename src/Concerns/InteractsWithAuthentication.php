@@ -2,8 +2,36 @@
 
 namespace Illuminate\Testing\Concerns;
 
+use Illuminate\Contracts\Auth\Authenticatable as UserContract;
+
 trait InteractsWithAuthentication
 {
+    /**
+     * Set the currently logged in user for the application.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  string|null  $guard
+     * @return $this
+     */
+    public function actingAs(UserContract $user, $guard = null)
+    {
+        $this->be($user, $guard);
+
+        return $this;
+    }
+
+    /**
+     * Set the currently logged in user for the application.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  string|null  $guard
+     * @return void
+     */
+    public function be(UserContract $user, $guard = null)
+    {
+        $this->auth($guard)->setUser($user);
+    }
+
     /**
      * Assert that the user is authenticated.
      *
@@ -12,7 +40,9 @@ trait InteractsWithAuthentication
      */
     public function seeIsAuthenticated($guard = null)
     {
-        $this->assertTrue($this->isAuthenticated($guard), 'The user is not authenticated');
+        $this->assertTrue(
+            $this->isAuthenticated($guard), 'The user is not authenticated'
+        );
 
         return $this;
     }
@@ -25,7 +55,9 @@ trait InteractsWithAuthentication
      */
     public function dontSeeIsAuthenticated($guard = null)
     {
-        $this->assertFalse($this->isAuthenticated($guard), 'The user is authenticated');
+        $this->assertFalse(
+            $this->isAuthenticated($guard), 'The user is authenticated'
+        );
 
         return $this;
     }
@@ -68,7 +100,8 @@ trait InteractsWithAuthentication
     public function seeCredentials(array $credentials, $guard = null)
     {
         $this->assertTrue(
-            $this->hasCredentials($credentials, $guard), 'The given credentials are invalid.'
+            $this->hasCredentials($credentials, $guard),
+            'The given credentials are invalid.'
         );
 
         return $this;
@@ -84,7 +117,8 @@ trait InteractsWithAuthentication
     public function dontSeeCredentials(array $credentials, $guard = null)
     {
         $this->assertFalse(
-            $this->hasCredentials($credentials, $guard), 'The given credentials are valid.'
+            $this->hasCredentials($credentials, $guard),
+            'The given credentials are valid.'
         );
 
         return $this;
