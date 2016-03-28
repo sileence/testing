@@ -1,6 +1,7 @@
 # Laravel Testing Package
 
 [![Build Status](https://travis-ci.org/sileence/testing.svg?branch=master)](https://travis-ci.org/sileence/testing)
+[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
 
 This testing package contains convenient helper methods that will allow you to expressively test your Laravel applications.
 
